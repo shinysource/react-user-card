@@ -13,18 +13,7 @@ const AboutUs = () => {
     setIsLoading(true);
     getUser().then((response) => {
       const responseUsers: User[] = response.data;
-      responseUsers.map((user) => {
-        getAvatar(user.name).then((response) => {
-          setUsers((users) => [
-            ...users,
-            {
-              ...user,
-              avatar: response.data,
-            },
-          ]);
-        });
-      });
-
+      setUsers(responseUsers);
       setIsLoading(false);
     });
   };
@@ -33,11 +22,28 @@ const AboutUs = () => {
     fetchUser();
   }, []);
 
+  const handleFavorite = (user: User) => {
+    const newUsers = users.map((user_one) => {
+      if (user_one.id === user.id) {
+        user_one.favorite = !user_one.favorite;
+      }
+      return user_one;
+    });
+
+    setUsers(newUsers);
+    return;
+  };
+
   return (
     <Row gutter={[16, 16]} justify="center" style={{ marginTop: 30 }}>
       {users.map((user, index) => (
         <Col xs={{ span: 20 }} md={{ span: 7 }} lg={{ span: 5 }}>
-          <UserCard key={index} user={user} loading={isLoading} />
+          <UserCard
+            key={index}
+            user={user}
+            loading={isLoading}
+            action={handleFavorite}
+          />
         </Col>
       ))}
     </Row>

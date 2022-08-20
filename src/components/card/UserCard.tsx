@@ -2,6 +2,7 @@ import React from "react";
 import {
   EditOutlined,
   HeartTwoTone,
+  HeartFilled,
   DeleteFilled,
   MailOutlined,
   PhoneOutlined,
@@ -16,15 +17,33 @@ const { Meta } = Card;
 export type UserCardProps = {
   user: User;
   loading: boolean;
+  action: (e: User) => void;
 };
 
-const UserCard = ({ user, loading }: UserCardProps) => {
+const UserCard = ({ user, loading, action }: UserCardProps) => {
   return (
     <>
       <Card
-        cover={<img alt="user" src={user.avatar} />}
+        cover={
+          <img
+            alt="user"
+            src={`https://avatars.dicebear.com/v2/avataaars/{{${user.name}}}.svg?options[mood][]=happy`}
+          />
+        }
         actions={[
-          <HeartTwoTone twoToneColor="#eb2f96" key="setting" />,
+          user.favorite === true ? (
+            <HeartFilled
+              key="setting"
+              style={{ color: "#eb2f96" }}
+              onClick={() => action(user)}
+            />
+          ) : (
+            <HeartTwoTone
+              twoToneColor="#eb2f96"
+              key="setting"
+              onClick={() => action(user)}
+            />
+          ),
           <EditOutlined key="edit" />,
           <DeleteFilled key="ellipsis" />,
         ]}
