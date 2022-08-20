@@ -1,7 +1,7 @@
 import React from "react";
 import {
   EditOutlined,
-  HeartOutlined,
+  HeartTwoTone,
   DeleteFilled,
   MailOutlined,
   PhoneOutlined,
@@ -9,38 +9,46 @@ import {
 } from "@ant-design/icons";
 import { Avatar, Card } from "antd";
 
+import { User } from "../../types";
+
 const { Meta } = Card;
 
 export type UserCardProps = {
-  userAvatar: string;
-  userDetail: {
-    name: string;
-    email: string;
-    phone: string;
-    site: string;
-  };
+  user: User;
+  loading: boolean;
 };
 
-const UserCard = ({ userAvatar, userDetail }: UserCardProps) => {
+const UserCard = ({ user, loading }: UserCardProps) => {
   return (
-    <Card
-      cover={<img alt="user" src={userAvatar} />}
-      actions={[
-        <HeartOutlined twoToneColor="#eb2f96" key="setting" />,
-        <EditOutlined key="edit" />,
-        <DeleteFilled key="ellipsis" />,
-      ]}
-    >
-      <Meta
-        title={userDetail.name}
-        description={
-          <div>
-            <MailOutlined /> <span>{userDetail.email}</span>
-            <PhoneOutlined /> <span>{userDetail.phone}</span>
-            <GlobalOutlined /> <span>{userDetail.site}</span>
-          </div>
-        }
-      />
-    </Card>
+    <>
+      <Card
+        cover={<img alt="user" src={user.avatar} />}
+        actions={[
+          <HeartTwoTone twoToneColor="#eb2f96" key="setting" />,
+          <EditOutlined key="edit" />,
+          <DeleteFilled key="ellipsis" />,
+        ]}
+        loading={loading}
+      >
+        <Meta
+          title={user.name}
+          description={
+            <div>
+              <div>
+                <MailOutlined /> <span>{user.email}</span>
+              </div>
+              <div>
+                <PhoneOutlined /> <span>{user.phone}</span>
+              </div>
+              <div>
+                <GlobalOutlined /> <span>{"http://" + user.website}</span>
+              </div>
+            </div>
+          }
+        />
+      </Card>
+    </>
   );
 };
+
+export default UserCard;
