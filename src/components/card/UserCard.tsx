@@ -8,9 +8,10 @@ import {
   PhoneOutlined,
   GlobalOutlined,
 } from "@ant-design/icons";
-import { Avatar, Card } from "antd";
+import { Card } from "antd";
 
 import RemoveModal from "../modal/RemoveModal";
+import EditModal from "../modal/EditModal";
 import { User } from "../../types";
 
 const { Meta } = Card;
@@ -19,28 +20,35 @@ export type UserCardProps = {
   user: User;
   loading: boolean;
   favorite: (e: User) => void;
-  remove: (e: User) => void;
+  isRemoveModalVisible: boolean;
+  showRemoveModal: (e: User) => void;
+  handleRemoveOk: (e: User) => void;
+  handleRemoveCancel: () => void;
+  isEditModalVisible: boolean;
+  showEditModal: (e: User) => void;
+  handleEditOk: (e: User) => void;
+  handleEditCancel: () => void;
 };
 
 const UserCard = ({
   user,
   loading,
-  remove: handleDelete,
   favorite,
+  isRemoveModalVisible,
+  showRemoveModal,
+  handleRemoveOk,
+  handleRemoveCancel,
+  isEditModalVisible,
+  showEditModal,
+  handleEditOk,
+  handleEditCancel,
 }: UserCardProps) => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const showModal = () => {
-    setIsModalVisible(true);
+  const removeOk = () => {
+    handleRemoveOk(user);
   };
 
-  const handleOk = () => {
-    setIsModalVisible(false);
-    handleDelete(user);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
+  const editOk = () => {
+    handleEditOk(user);
   };
 
   return (
@@ -66,8 +74,8 @@ const UserCard = ({
               onClick={() => favorite(user)}
             />
           ),
-          <EditOutlined key="edit" />,
-          <DeleteFilled key="ellipsis" onClick={() => showModal()} />,
+          <EditOutlined key="edit" onClick={() => showEditModal(user)} />,
+          <DeleteFilled key="ellipsis" onClick={() => showRemoveModal(user)} />,
         ]}
         loading={loading}
       >
@@ -89,9 +97,14 @@ const UserCard = ({
         />
       </Card>
       <RemoveModal
-        handleOk={handleOk}
-        handleCancel={handleCancel}
-        visible={isModalVisible}
+        handleOk={removeOk}
+        handleCancel={handleRemoveCancel}
+        visible={isRemoveModalVisible}
+      />
+      <EditModal
+        handleOk={editOk}
+        handleCancel={handleEditCancel}
+        visible={isEditModalVisible}
       />
     </>
   );

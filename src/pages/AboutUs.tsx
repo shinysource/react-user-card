@@ -8,6 +8,9 @@ import { User } from "../types";
 const AboutUs = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
+  const [modalUser, setModalUser] = useState<User | null>(null);
+  const [isRemoveModalVisible, setIsRemoveModalVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
   const fetchUser = () => {
     setIsLoading(true);
@@ -41,8 +44,51 @@ const AboutUs = () => {
     return;
   };
 
+  const handeEdit = (user: User) => {
+    const newUsers = users.filter((userOne) => userOne.id !== user.id);
+
+    setUsers(newUsers);
+    return;
+  };
+
+  // Remove Modal
+  const showRemoveModal = (user: User) => {
+    setModalUser(user);
+    setIsRemoveModalVisible(true);
+  };
+
+  const handleRemoveOk = () => {
+    if (!modalUser) return;
+    handleDelete(modalUser);
+    setModalUser(null);
+    setIsRemoveModalVisible(false);
+  };
+
+  const handleRemoveCancel = () => {
+    setModalUser(null);
+    setIsRemoveModalVisible(false);
+  };
+
+  // Edit Modal
+  const showEditModal = (user: User) => {
+    setModalUser(user);
+    setIsEditModalVisible(true);
+  };
+
+  const handleEditOk = () => {
+    if (!modalUser) return;
+    handeEdit(modalUser);
+    setModalUser(null);
+    setIsEditModalVisible(false);
+  };
+
+  const handleEditCancel = () => {
+    setModalUser(null);
+    setIsEditModalVisible(false);
+  };
+
   return (
-    <Row gutter={[16, 16]} justify="center" style={{ margin: 30 }}>
+    <Row gutter={[16, 16]} justify="center">
       {users.map((user, index) => (
         <Col xs={{ span: 20 }} md={{ span: 7 }} lg={{ span: 5 }}>
           <UserCard
@@ -50,7 +96,22 @@ const AboutUs = () => {
             user={user}
             loading={isLoading}
             favorite={handleFavorite}
-            remove={handleDelete}
+            isRemoveModalVisible={
+              isRemoveModalVisible &&
+              modalUser !== null &&
+              modalUser.id === user.id
+            }
+            showRemoveModal={showRemoveModal}
+            handleRemoveOk={handleRemoveOk}
+            handleRemoveCancel={handleRemoveCancel}
+            isEditModalVisible={
+              isEditModalVisible &&
+              modalUser !== null &&
+              modalUser.id === user.id
+            }
+            showEditModal={showEditModal}
+            handleEditOk={handleEditOk}
+            handleEditCancel={handleEditCancel}
           />
         </Col>
       ))}
