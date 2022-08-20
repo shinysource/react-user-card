@@ -23,26 +23,34 @@ const AboutUs = () => {
   }, []);
 
   const handleFavorite = (user: User) => {
-    const newUsers = users.map((user_one) => {
-      if (user_one.id === user.id) {
-        user_one.favorite = !user_one.favorite;
+    const newUsers = users.map((userOne) => {
+      if (userOne.id === user.id) {
+        userOne.favorite = !userOne.favorite;
       }
-      return user_one;
+      return userOne;
     });
 
     setUsers(newUsers);
     return;
   };
 
+  const handleDelete = (user: User) => {
+    const newUsers = users.filter((userOne) => userOne.id !== user.id);
+
+    setUsers(newUsers);
+    return;
+  };
+
   return (
-    <Row gutter={[16, 16]} justify="center" style={{ marginTop: 30 }}>
+    <Row gutter={[16, 16]} justify="center" style={{ margin: 30 }}>
       {users.map((user, index) => (
         <Col xs={{ span: 20 }} md={{ span: 7 }} lg={{ span: 5 }}>
           <UserCard
             key={index}
             user={user}
             loading={isLoading}
-            action={handleFavorite}
+            favorite={handleFavorite}
+            remove={handleDelete}
           />
         </Col>
       ))}

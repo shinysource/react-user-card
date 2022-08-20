@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   EditOutlined,
   HeartTwoTone,
@@ -10,6 +10,7 @@ import {
 } from "@ant-design/icons";
 import { Avatar, Card } from "antd";
 
+import RemoveModal from "../modal/RemoveModal";
 import { User } from "../../types";
 
 const { Meta } = Card;
@@ -17,10 +18,31 @@ const { Meta } = Card;
 export type UserCardProps = {
   user: User;
   loading: boolean;
-  action: (e: User) => void;
+  favorite: (e: User) => void;
+  remove: (e: User) => void;
 };
 
-const UserCard = ({ user, loading, action }: UserCardProps) => {
+const UserCard = ({
+  user,
+  loading,
+  remove: handleDelete,
+  favorite,
+}: UserCardProps) => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+    handleDelete(user);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <>
       <Card
@@ -35,17 +57,17 @@ const UserCard = ({ user, loading, action }: UserCardProps) => {
             <HeartFilled
               key="setting"
               style={{ color: "#eb2f96" }}
-              onClick={() => action(user)}
+              onClick={() => favorite(user)}
             />
           ) : (
             <HeartTwoTone
               twoToneColor="#eb2f96"
               key="setting"
-              onClick={() => action(user)}
+              onClick={() => favorite(user)}
             />
           ),
           <EditOutlined key="edit" />,
-          <DeleteFilled key="ellipsis" />,
+          <DeleteFilled key="ellipsis" onClick={() => showModal()} />,
         ]}
         loading={loading}
       >
@@ -66,6 +88,11 @@ const UserCard = ({ user, loading, action }: UserCardProps) => {
           }
         />
       </Card>
+      <RemoveModal
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        visible={isModalVisible}
+      />
     </>
   );
 };
