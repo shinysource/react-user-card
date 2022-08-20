@@ -1,7 +1,12 @@
 import React from "react";
+import AboutUs from "./pages/AboutUs";
 
 function App() {
-  return <div className="App"></div>;
+  return (
+    <div>
+      <AboutUs />
+    </div>
+  );
 }
 
 export default App;
