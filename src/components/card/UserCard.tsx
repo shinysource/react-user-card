@@ -47,7 +47,7 @@ const UserCard = ({
     handleRemoveOk(user);
   };
 
-  const editOk = () => {
+  const editOk = (user: User) => {
     handleEditOk(user);
   };
 
@@ -105,6 +105,7 @@ const UserCard = ({
         handleOk={editOk}
         handleCancel={handleEditCancel}
         visible={isEditModalVisible}
+        user={user}
       />
     </>
   );

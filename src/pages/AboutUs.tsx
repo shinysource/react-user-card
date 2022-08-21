@@ -37,6 +37,7 @@ const AboutUs = () => {
     return;
   };
 
+  // Remove Modal
   const handleDelete = (user: User) => {
     const newUsers = users.filter((userOne) => userOne.id !== user.id);
 
@@ -44,14 +45,6 @@ const AboutUs = () => {
     return;
   };
 
-  const handeEdit = (user: User) => {
-    const newUsers = users.filter((userOne) => userOne.id !== user.id);
-
-    setUsers(newUsers);
-    return;
-  };
-
-  // Remove Modal
   const showRemoveModal = (user: User) => {
     setModalUser(user);
     setIsRemoveModalVisible(true);
@@ -69,15 +62,29 @@ const AboutUs = () => {
     setIsRemoveModalVisible(false);
   };
 
+  console.log(modalUser);
+
   // Edit Modal
+  const handeEdit = (user: User) => {
+    const newUsers = users.map((userOne) => {
+      if (userOne.id === user.id) {
+        return user;
+      }
+      return userOne;
+    });
+
+    setUsers(newUsers);
+    return;
+  };
+
   const showEditModal = (user: User) => {
     setModalUser(user);
     setIsEditModalVisible(true);
   };
 
-  const handleEditOk = () => {
+  const handleEditOk = (newUser: User) => {
     if (!modalUser) return;
-    handeEdit(modalUser);
+    handeEdit(newUser);
     setModalUser(null);
     setIsEditModalVisible(false);
   };
@@ -89,10 +96,10 @@ const AboutUs = () => {
 
   return (
     <Row gutter={[16, 16]} justify="center">
-      {users.map((user, index) => (
+      {users.map((user) => (
         <Col xs={{ span: 20 }} md={{ span: 7 }} lg={{ span: 5 }}>
           <UserCard
-            key={index}
+            key={user.id}
             user={user}
             loading={isLoading}
             favorite={handleFavorite}
